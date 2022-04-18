@@ -64,7 +64,6 @@ namespace CustomItems.Items
         };
 
         /// <inheritdoc />
-        [YamlIgnore]
         public override AttachmentName[] Attachments { get; set; } =
         {
             AttachmentName.ExtendedBarrel,
