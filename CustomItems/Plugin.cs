@@ -41,9 +41,6 @@ namespace CustomItems
 
             Config.LoadItems();
 
-            Log.Debug("Registering items..", Config.IsDebugEnabled);
-            CustomItem.RegisterItems(overrideClass: Config.ItemConfigs);
-
             base.OnEnabled();
         }
 

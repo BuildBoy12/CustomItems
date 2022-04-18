@@ -9,7 +9,10 @@ namespace CustomItems.Configs
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Reflection;
     using CustomItems.Items;
+    using Exiled.CustomItems.API;
+    using Exiled.CustomItems.API.Features;
 
     /// <summary>
     /// All item config settings.
@@ -159,5 +162,15 @@ namespace CustomItems.Configs
         {
             new AutoGun(),
         };
+
+        /// <inheritdoc cref="CustomItem.RegisterItems(bool,object)"/>
+        public void RegisterItems()
+        {
+            foreach (PropertyInfo propertyInfo in GetType().GetProperties())
+            {
+                if (propertyInfo.GetValue(this) is IEnumerable<CustomItem> items)
+                    items.Register();
+            }
+        }
     }
 }
