@@ -29,7 +29,7 @@ namespace CustomItems.Configs
         /// Gets or sets the list of <see cref="CustomItems.Items.GrenadeLauncher"/>s.
         /// </summary>
         [Description("The list of grenade launchers.")]
-        public List<GrenadeLauncher> GrenadeLaunchers { get; set; } = new()
+        public List<GrenadeLauncher> GrenadeLauncher { get; set; } = new()
         {
             new GrenadeLauncher(),
         };
@@ -56,7 +56,7 @@ namespace CustomItems.Configs
         /// Gets or sets the list of <see cref="CustomItems.Items.LuckyCoin"/>s.
         /// </summary>
         [Description("The list of lucky coins.")]
-        public List<LuckyCoin> LuckyCoins { get; set; } = new()
+        public List<LuckyCoin> LuckyCoin { get; set; } = new()
         {
             new LuckyCoin(),
         };
@@ -65,7 +65,7 @@ namespace CustomItems.Configs
         /// Gets or sets the list of <see cref="CustomItems.Items.MediGun"/>s.
         /// </summary>
         [Description("The list of medical guns.")]
-        public List<MediGun> MediGuns { get; set; } = new()
+        public List<MediGun> MediGun { get; set; } = new()
         {
             new MediGun(),
         };
@@ -128,7 +128,7 @@ namespace CustomItems.Configs
         /// Gets or sets the list of <see cref="CustomItems.Items.DeflectorShield"/>s.
         /// </summary>
         [Description("The list of DeflectorShields.")]
-        public List<DeflectorShield> DeflectorShields { get; set; } = new()
+        public List<DeflectorShield> DeflectorShield { get; set; } = new()
         {
             new DeflectorShield(),
         };
