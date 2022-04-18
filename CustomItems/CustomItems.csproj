@@ -3,10 +3,10 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
 	<LangVersion>9</LangVersion>
-    <AssemblyName>NPCs</AssemblyName>
+    <AssemblyName>CustomItems</AssemblyName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Authors>Build</Authors>
-    <Version>1.0.0</Version>
+    <Authors>Joker119 &amp; iopierto &amp; Build</Authors>
+    <Version>6.2.0</Version>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
