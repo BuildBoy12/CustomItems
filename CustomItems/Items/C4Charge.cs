@@ -22,22 +22,10 @@ namespace CustomItems.Items
     using UnityEngine;
     using YamlDotNet.Serialization;
 
-    using PlayerEvent = Exiled.Events.Handlers.Player;
-
     /// <inheritdoc/>
     [CustomItem(ItemType.GrenadeHE)]
     public class C4Charge : CustomGrenade
     {
-        /// <summary>
-        /// The instance of this item manager.
-        /// </summary>
-        public static C4Charge Instance;
-
-        /// <summary>
-        /// All of the currently placed charges.
-        /// </summary>
-        public static Dictionary<Pickup, Player> PlacedCharges = new Dictionary<Pickup, Player>();
-
         /// <summary>
         /// Enum containing methods indicating how C4 charge can be removed.
         /// </summary>
@@ -59,6 +47,18 @@ namespace CustomItems.Items
             Drop = 2,
         }
 
+        /// <summary>
+        /// Gets the instance of this item manager.
+        /// </summary>
+        [YamlIgnore]
+        public static C4Charge Instance { get; private set; }
+
+        /// <summary>
+        /// Gets all of the currently placed charges.
+        /// </summary>
+        [YamlIgnore]
+        public static Dictionary<Pickup, Player> PlacedCharges { get; } = new();
+
         /// <inheritdoc/>
         public override uint Id { get; set; } = 15;
 
@@ -69,36 +69,32 @@ namespace CustomItems.Items
         public override float Weight { get; set; } = 0.75f;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 5,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 10,
                     Location = SpawnLocation.InsideLczArmory,
                 },
-
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 25,
                     Location = SpawnLocation.InsideHczArmory,
                 },
-
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 50,
                     Location = SpawnLocation.InsideNukeArmory,
                 },
-
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 50,
                     Location = SpawnLocation.Inside049Armory,
                 },
-
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 100,
                     Location = SpawnLocation.InsideSurfaceNuke,
@@ -210,9 +206,9 @@ namespace CustomItems.Items
         {
             Instance = this;
 
-            PlayerEvent.Destroying += OnDestroying;
-            PlayerEvent.Died += OnDied;
-            PlayerEvent.Shooting += OnShooting;
+            Exiled.Events.Handlers.Player.Destroying += OnDestroying;
+            Exiled.Events.Handlers.Player.Died += OnDied;
+            Exiled.Events.Handlers.Player.Shooting += OnShooting;
 
             base.SubscribeEvents();
         }
@@ -220,12 +216,11 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void UnsubscribeEvents()
         {
+            Exiled.Events.Handlers.Player.Destroying -= OnDestroying;
+            Exiled.Events.Handlers.Player.Died -= OnDied;
+            Exiled.Events.Handlers.Player.Shooting -= OnShooting;
+
             Instance = null;
-
-            PlayerEvent.Destroying -= OnDestroying;
-            PlayerEvent.Died -= OnDied;
-            PlayerEvent.Shooting -= OnShooting;
-
             base.UnsubscribeEvents();
         }
 
@@ -275,7 +270,7 @@ namespace CustomItems.Items
 
         private void OnDied(DiedEventArgs ev)
         {
-            foreach (var charge in PlacedCharges.ToList())
+            foreach (KeyValuePair<Pickup, Player> charge in PlacedCharges.ToList())
             {
                 if (charge.Value == ev.Target)
                 {

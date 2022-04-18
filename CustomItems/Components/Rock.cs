@@ -64,9 +64,7 @@ namespace CustomItems.Components
             try
             {
                 if (collision.gameObject == Owner)
-                {
                     return;
-                }
 
                 if (Player.Get(collision.collider.GetComponentInParent<ReferenceHub>()) is Player target && (target.Role.Side != Side || FriendlyFire))
                 {

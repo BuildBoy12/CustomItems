@@ -8,9 +8,11 @@
 namespace CustomItems.Commands
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using CommandSystem;
     using Exiled.API.Features;
+    using Exiled.API.Features.Items;
     using UnityEngine;
 
     /// <inheritdoc/>
@@ -18,18 +20,18 @@ namespace CustomItems.Commands
     public class C4Charge : ICommand
     {
         /// <inheritdoc/>
-        public string Command { get; } = "detonate";
+        public string Command => "detonate";
 
         /// <inheritdoc/>
-        public string[] Aliases { get; } = new string[] { "det" };
+        public string[] Aliases { get; } = { "det" };
 
         /// <inheritdoc/>
-        public string Description { get; } = "Detonate command for detonating C4 charges";
+        public string Description => "Detonate command for detonating C4 charges";
 
         /// <inheritdoc/>
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            Player ply = Player.Get((sender as CommandSender).SenderId);
+            Player ply = Player.Get(sender);
 
             if (!Items.C4Charge.PlacedCharges.ContainsValue(ply))
             {
@@ -45,17 +47,15 @@ namespace CustomItems.Commands
 
             int i = 0;
 
-            foreach (var charge in Items.C4Charge.PlacedCharges.ToList())
+            foreach (KeyValuePair<Pickup, Player> charge in Items.C4Charge.PlacedCharges.ToList())
             {
                 if (charge.Value != ply)
                     continue;
 
                 float distance = Vector3.Distance(charge.Key.Position, ply.Position);
-
                 if (distance < Items.C4Charge.Instance.MaxDistance)
                 {
                     Items.C4Charge.Instance.C4Handler(charge.Key);
-
                     i++;
                 }
                 else
@@ -64,11 +64,7 @@ namespace CustomItems.Commands
                 }
             }
 
-            if (i == 1)
-                response = $"\n<color=green>{i} C4 charge has been detonated!</color>";
-            else
-                response = $"\n<color=green>{i} C4 charges have been deonated!</color>";
-
+            response = $"\n<color=green>{i} C4 {(i == 1 ? "charge has" : "charges have")} been detonated!</color>";
             return true;
         }
     }

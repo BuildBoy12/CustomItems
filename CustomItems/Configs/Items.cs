@@ -5,14 +5,11 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-#pragma warning disable SA1200
-
-using CustomItems.Items;
-
 namespace CustomItems.Configs
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using CustomItems.Items;
 
     /// <summary>
     /// All item config settings.
@@ -20,145 +17,145 @@ namespace CustomItems.Configs
     public class Items
     {
         /// <summary>
-        /// Gets the list of emp greanades.
+        /// Gets or sets the list of <see cref="CustomItems.Items.EmpGrenade"/>s.
         /// </summary>
         [Description("The list of EMP grenades.")]
-        public List<EmpGrenade> EmpGrenades { get; private set; } = new List<EmpGrenade>
+        public List<EmpGrenade> EmpGrenade { get; set; } = new()
         {
             new EmpGrenade(),
         };
 
         /// <summary>
-        /// Gets the list of grenade launchers.
+        /// Gets or sets the list of <see cref="CustomItems.Items.GrenadeLauncher"/>s.
         /// </summary>
         [Description("The list of grenade launchers.")]
-        public List<GrenadeLauncher> GrenadeLaunchers { get; private set; } = new List<GrenadeLauncher>
+        public List<GrenadeLauncher> GrenadeLaunchers { get; set; } = new()
         {
             new GrenadeLauncher(),
         };
 
         /// <summary>
-        /// Gets the list of implosion grenades.
+        /// Gets or sets the list of <see cref="CustomItems.Items.ImplosionGrenade"/>s.
         /// </summary>
         [Description("The list of implosion grenades.")]
-        public List<ImplosionGrenade> ImplosionGrenades { get; private set; } = new List<ImplosionGrenade>
+        public List<ImplosionGrenade> ImplosionGrenade { get; set; } = new()
         {
             new ImplosionGrenade(),
         };
 
         /// <summary>
-        /// Gets the list of lethal injections.
+        /// Gets or sets the list of <see cref="CustomItems.Items.LethalInjection"/>s.
         /// </summary>
         [Description("The list of lethal injections.")]
-        public List<LethalInjection> LethalInjections { get; private set; } = new List<LethalInjection>
+        public List<LethalInjection> LethalInjection { get; set; } = new()
         {
             new LethalInjection(),
         };
 
         /// <summary>
-        /// Gets the list of lucky coins.
+        /// Gets or sets the list of <see cref="CustomItems.Items.LuckyCoin"/>s.
         /// </summary>
         [Description("The list of lucky coins.")]
-        public List<LuckyCoin> LuckyCoins { get; private set; } = new List<LuckyCoin>
+        public List<LuckyCoin> LuckyCoins { get; set; } = new()
         {
             new LuckyCoin(),
         };
 
         /// <summary>
-        /// Gets the list of mediGuns.
+        /// Gets or sets the list of <see cref="CustomItems.Items.MediGun"/>s.
         /// </summary>
-        [Description("The list of mediGuns.")]
-        public List<MediGun> MediGuns { get; private set; } = new List<MediGun>
+        [Description("The list of medical guns.")]
+        public List<MediGun> MediGuns { get; set; } = new()
         {
             new MediGun(),
         };
 
         /// <summary>
-        /// Gets the list of Scp127s.
+        /// Gets or sets the list of <see cref="CustomItems.Items.Scp127"/>s.
         /// </summary>
         [Description("The list of Scp127s.")]
-        public List<Scp127> Scp127s { get; private set; } = new List<Scp127>
+        public List<Scp127> Scp127 { get; set; } = new()
         {
             new Scp127(),
         };
 
         /// <summary>
-        /// Gets the list of Scp1499s.
+        /// Gets or sets the list of <see cref="CustomItems.Items.Scp1499"/>s.
         /// </summary>
         [Description("The list of Scp1499s.")]
-        public List<Scp1499> Scp1499s { get; private set; } = new List<Scp1499>
+        public List<Scp1499> Scp1499 { get; set; } = new()
         {
             new Scp1499(),
         };
 
         /// <summary>
-        /// Gets the list of sniper rifles.
+        /// Gets or sets the list of <see cref="CustomItems.Items.SniperRifle"/>s.
         /// </summary>
         [Description("The list of sniper rifles.")]
-        public List<SniperRifle> SniperRifle { get; private set; } = new List<SniperRifle>
+        public List<SniperRifle> SniperRifle { get; set; } = new()
         {
             new SniperRifle(),
         };
 
         /// <summary>
-        /// Gets the list of tranquilizer guns.
+        /// Gets or sets the list of <see cref="CustomItems.Items.TranquilizerGun"/>s.
         /// </summary>
         [Description("The list of tranquilizer guns.")]
-        public List<TranquilizerGun> TranquilizerGun { get; private set; } = new List<TranquilizerGun>
+        public List<TranquilizerGun> TranquilizerGun { get; set; } = new()
         {
             new TranquilizerGun(),
         };
 
         /// <summary>
-        /// Gets the list of Scp714s.
+        /// Gets or sets the list of <see cref="CustomItems.Items.Scp714"/>s.
         /// </summary>
         [Description("The list of Scp714s.")]
-        public List<Scp714> Scp714s { get; private set; } = new List<Scp714>
+        public List<Scp714> Scp714 { get; set; } = new()
         {
             new Scp714(),
         };
 
         /// <summary>
-        /// Gets the list of Anti-Memetic Pills.
+        /// Gets or sets the list of <see cref="CustomItems.Items.AntiMemeticPills"/>.
         /// </summary>
         [Description("The list of Anti-Memetic Pills.")]
-        public List<AntiMemeticPills> AntiMemeticPills { get; private set; } = new List<AntiMemeticPills>
+        public List<AntiMemeticPills> AntiMemeticPills { get; set; } = new()
         {
             new AntiMemeticPills(),
         };
 
         /// <summary>
-        /// Gets the list of DeflectorSheilds.
+        /// Gets or sets the list of <see cref="CustomItems.Items.DeflectorShield"/>s.
         /// </summary>
-        [Description("The list of DeflectorSheilds.")]
-        public List<DeflectorShield> DeflectorSheilds { get; private set; } = new List<DeflectorShield>
+        [Description("The list of DeflectorShields.")]
+        public List<DeflectorShield> DeflectorShields { get; set; } = new()
         {
             new DeflectorShield(),
         };
 
         /// <summary>
-        /// Gets the list of <see cref="Scp2818"/>s.
+        /// Gets or sets the list of <see cref="Scp2818"/>s.
         /// </summary>
         [Description("The list of SCP-2818s.")]
-        public List<Scp2818> Scp2818s { get; private set; } = new List<Scp2818>
+        public List<Scp2818> Scp2818 { get; set; } = new()
         {
             new Scp2818(),
         };
 
         /// <summary>
-        /// Gets the list of C4Charges.
+        /// Gets or sets the list of <see cref="CustomItems.Items.C4Charge"/>s.
         /// </summary>
         [Description("The list of C4Charges.")]
-        public List<C4Charge> C4Charges { get; private set; } = new List<C4Charge>
+        public List<C4Charge> C4Charge { get; set; } = new()
         {
             new C4Charge(),
         };
 
         /// <summary>
-        /// Gets the list of AutoGuns.
+        /// Gets or sets the list of <see cref="CustomItems.Items.AutoGun"/>s.
         /// </summary>
         [Description("The list of AutoGuns.")]
-        public List<AutoGun> AutoGuns { get; private set; } = new List<AutoGun>
+        public List<AutoGun> AutoGun { get; set; } = new()
         {
             new AutoGun(),
         };

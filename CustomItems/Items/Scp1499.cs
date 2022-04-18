@@ -27,8 +27,8 @@ namespace CustomItems.Items
     public class Scp1499 : CustomItem
     {
         // This position is where is unused terrain on the Surface
-        private readonly Vector3 scp1499DimensionPos = new Vector3(152.93f, 978.03f, 93.64f);
-        private readonly Dictionary<Player, Vector3> scp1499Players = new Dictionary<Player, Vector3>();
+        private readonly Vector3 scp1499DimensionPos = new(152.93f, 978.03f, 93.64f);
+        private readonly Dictionary<Player, Vector3> scp1499Players = new();
 
         /// <inheritdoc/>
         public override uint Id { get; set; } = 8;
@@ -43,12 +43,12 @@ namespace CustomItems.Items
         public override float Weight { get; set; } = 1.5f;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 10,
                     Location = SpawnLocation.InsideHid,
@@ -57,7 +57,7 @@ namespace CustomItems.Items
         };
 
         /// <summary>
-        /// Gets or sets how long the SCP-1499 can be wore, before automaticly player takes it off. (set to 0 for no limit).
+        /// Gets or sets how long the SCP-1499 can be wore, before automatically player takes it off. (set to 0 for no limit).
         /// </summary>
         [Description("How long the SCP-1499 can be wore, before automaticly player takes it off. (set to 0 for no limit)")]
         public float Duration { get; set; } = 15f;
@@ -88,13 +88,11 @@ namespace CustomItems.Items
             if (scp1499Players.ContainsKey(ev.Player) && Check(ev.Item))
             {
                 ev.IsAllowed = false;
-
                 SendPlayerBack(ev.Player);
+                return;
             }
-            else
-            {
-                base.OnDropping(ev);
-            }
+
+            base.OnDropping(ev);
         }
 
         /// <inheritdoc/>
@@ -156,13 +154,19 @@ namespace CustomItems.Items
                 else
                 {
                     foreach (Lift lift in Lift.List)
+                    {
                         if (lift.Name.Contains("Gate"))
+                        {
                             foreach (Elevator elevator in lift.Elevators)
+                            {
                                 if (Vector3.Distance(player.Position, elevator.Target.position) <= 3.5f)
                                 {
                                     shouldKill = true;
                                     break;
                                 }
+                            }
+                        }
+                    }
                 }
 
                 if (shouldKill)
@@ -177,13 +181,19 @@ namespace CustomItems.Items
                 else
                 {
                     foreach (Lift lift in Lift.List)
+                    {
                         if (lift.Name.Contains("El"))
+                        {
                             foreach (Elevator elevator in lift.Elevators)
+                            {
                                 if (Vector3.Distance(player.Position, elevator.Target.position) <= 3.5f)
                                 {
                                     shouldKill = true;
                                     break;
                                 }
+                            }
+                        }
+                    }
                 }
 
                 if (shouldKill)

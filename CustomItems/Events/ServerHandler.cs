@@ -7,20 +7,22 @@
 
 namespace CustomItems.Events
 {
-    using static CustomItems;
-
     /// <summary>
     /// Event Handlers.
     /// </summary>
     public class ServerHandler
     {
+        private readonly Plugin plugin;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ServerHandler"/> class.
+        /// </summary>
+        /// <param name="plugin">An instance of the <see cref="Plugin"/> class.</param>
+        public ServerHandler(Plugin plugin) => this.plugin = plugin;
+
         /// <summary>
         /// OnReloadingConfigs handler.
         /// </summary>
-        public void OnReloadingConfigs()
-        {
-            Instance.Config.LoadItems();
-            Instance.Config.ParseSubclassList();
-        }
+        public void OnReloadingConfigs() => plugin.Config.LoadItems();
     }
 }

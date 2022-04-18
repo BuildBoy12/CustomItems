@@ -28,18 +28,17 @@ namespace CustomItems.Items
         public override string Name { get; set; } = "AM-119";
 
         /// <inheritdoc/>
-        public override string Description { get; set; } =
-            "Drugs that make you forget things. If you use these while you are targeted by SCP-096, you will forget what his face looks like, and thus no longer be a target.";
+        public override string Description { get; set; } = "Drugs that make you forget things. If you use these while you are targeted by SCP-096, you will forget what his face looks like, and thus no longer be a target.";
 
         /// <inheritdoc/>
         public override float Weight { get; set; } = 1f;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint { Chance = 100, Location = SpawnLocation.Inside096 },
+                new() { Chance = 100, Location = SpawnLocation.Inside096 },
             },
         };
 
@@ -62,13 +61,14 @@ namespace CustomItems.Items
             if (!Check(ev.Player.CurrentItem))
                 return;
 
-            IEnumerable<Player> scp096s = Player.Get(RoleType.Scp096);
-
             Timing.CallDelayed(1f, () =>
             {
-                foreach (Player scp in scp096s)
+                foreach (Player scp in Player.Get(RoleType.Scp096))
+                {
                     if (scp.CurrentScp is PlayableScps.Scp096 scp096 && scp096.HasTarget(ev.Player.ReferenceHub))
                         scp096._targets.Remove(ev.Player.ReferenceHub);
+                }
+
                 ev.Player.EnableEffect<Amnesia>(10f, true);
             });
         }

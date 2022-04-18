@@ -18,8 +18,8 @@ namespace CustomItems.Items
     using Exiled.Events.EventArgs;
     using InventorySystem.Items.ThrowableProjectiles;
     using MEC;
+    using NorthwoodLib.Pools;
     using UnityEngine;
-    using Scp106 = Exiled.Events.Handlers.Scp106;
 
     /// <inheritdoc />
     [CustomItem(ItemType.GrenadeHE)]
@@ -42,17 +42,17 @@ namespace CustomItems.Items
         public override float Weight { get; set; } = 0.65f;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 50,
                     Location = SpawnLocation.Inside012Locker,
                 },
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 100,
                     Location = SpawnLocation.InsideHczArmory,
@@ -101,19 +101,19 @@ namespace CustomItems.Items
         /// <inheritdoc/>
         protected override void SubscribeEvents()
         {
-            Scp106.Teleporting += OnTeleporting;
-
+            Exiled.Events.Handlers.Scp106.Teleporting += OnTeleporting;
             base.SubscribeEvents();
         }
 
         /// <inheritdoc/>
         protected override void UnsubscribeEvents()
         {
-            Scp106.Teleporting -= OnTeleporting;
+            Exiled.Events.Handlers.Scp106.Teleporting -= OnTeleporting;
 
             foreach (CoroutineHandle handle in Coroutines)
                 Timing.KillCoroutines(handle);
 
+            Coroutines.Clear();
             base.UnsubscribeEvents();
         }
 
@@ -121,22 +121,17 @@ namespace CustomItems.Items
         protected override void OnExploding(ExplodingGrenadeEventArgs ev)
         {
             ev.IsAllowed = false;
-            Log.Debug($"{ev.Thrower.Nickname} threw an implosion grenade!", CustomItems.Instance.Config.IsDebugEnabled);
-            List<Player> copiedList = new List<Player>();
-            foreach (Player player in ev.TargetsToAffect)
-            {
-                copiedList.Add(player);
-            }
-
+            Log.Debug($"{ev.Thrower.Nickname} threw an implosion grenade!", Plugin.Instance.Config.IsDebugEnabled);
+            List<Player> copiedList = new List<Player>(ev.TargetsToAffect);
             ev.TargetsToAffect.Clear();
-            Log.Debug("IG: List cleared.", CustomItems.Instance.Config.IsDebugEnabled);
-            effectedPlayers = NorthwoodLib.Pools.ListPool<Player>.Shared.Rent();
+            Log.Debug("IG: List cleared.", Plugin.Instance.Config.IsDebugEnabled);
+            effectedPlayers = ListPool<Player>.Shared.Rent();
             foreach (Player player in copiedList)
             {
                 if (BlacklistedRoles.Contains(player.Role))
                     continue;
 
-                Log.Debug($"{player.Nickname} starting suction", CustomItems.Instance.Config.IsDebugEnabled);
+                Log.Debug($"{player.Nickname} starting suction", Plugin.Instance.Config.IsDebugEnabled);
 
                 try
                 {
@@ -147,7 +142,7 @@ namespace CustomItems.Items
                     }
 
                     bool line = Physics.Linecast(ev.Grenade.transform.position, player.Position, layerMask);
-                    Log.Debug($"{player.Nickname} - {line}", CustomItems.Instance.Config.IsDebugEnabled);
+                    Log.Debug($"{player.Nickname} - {line}", Plugin.Instance.Config.IsDebugEnabled);
                     if (line)
                     {
                         effectedPlayers.Add(player);
@@ -163,10 +158,10 @@ namespace CustomItems.Items
 
         private IEnumerator<float> DoSuction(Player player, Vector3 position)
         {
-            Log.Debug($"{player.Nickname} Suction begin", CustomItems.Instance.Config.IsDebugEnabled);
+            Log.Debug($"{player.Nickname} Suction begin", Plugin.Instance.Config.IsDebugEnabled);
             for (int i = 0; i < SuctionCount; i++)
             {
-                Log.Debug($"{player.Nickname} suctioned?", CustomItems.Instance.Config.IsDebugEnabled);
+                Log.Debug($"{player.Nickname} suctioned?", Plugin.Instance.Config.IsDebugEnabled);
                 Vector3 alteredPosition = position + (1f * (player.Position - position).normalized);
                 Vector3 newPos = Vector3.MoveTowards(player.Position, alteredPosition, SuctionPerTick);
                 if (!Physics.Linecast(player.Position, newPos, player.ReferenceHub.playerMovementSync.CollidableSurfaces))
@@ -175,7 +170,7 @@ namespace CustomItems.Items
                 yield return Timing.WaitForSeconds(SuctionTickRate);
             }
 
-            NorthwoodLib.Pools.ListPool<Player>.Shared.Return(effectedPlayers);
+            ListPool<Player>.Shared.Return(effectedPlayers);
         }
 
         private void OnTeleporting(TeleportingEventArgs ev)

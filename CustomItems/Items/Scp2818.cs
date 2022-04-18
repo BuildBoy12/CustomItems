@@ -18,7 +18,6 @@ namespace CustomItems.Items
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
-    using InventorySystem.Items.Firearms.Attachments;
     using MEC;
     using PlayerStatsSystem;
     using UnityEngine;
@@ -37,8 +36,7 @@ namespace CustomItems.Items
         public override string Name { get; set; } = "SCP-2818";
 
         /// <inheritdoc/>
-        public override string Description { get; set; } =
-            "When this weapon is fired, it uses the biomass of the shooter as the bullet.";
+        public override string Description { get; set; } = "When this weapon is fired, it uses the biomass of the shooter as the bullet.";
 
         /// <inheritdoc/>
         public override float Weight { get; set; } = 3.95f;
@@ -66,17 +64,17 @@ namespace CustomItems.Items
         public bool DespawnAfterUse { get; set; } = false;
 
         /// <inheritdoc/>
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 60,
                     Location = SpawnLocation.InsideHid,
                 },
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 40,
                     Location = SpawnLocation.InsideHczArmory,
@@ -94,11 +92,13 @@ namespace CustomItems.Items
             try
             {
                 foreach (Item item in ev.Shooter.Items.ToList())
+                {
                     if (Check(item))
                     {
-                        Log.Debug($"SCP-2818: Found a 2818 in inventory of shooter, removing.");
+                        Log.Debug($"SCP-2818: Found a 2818 in inventory of shooter, removing.", Plugin.Instance.Config.IsDebugEnabled);
                         ev.Shooter.RemoveItem(item);
                     }
+                }
 
                 Player target = Player.Get(ev.TargetNetId);
                 if (ev.ShotPosition == Vector3.zero || (ev.Shooter.Position - ev.ShotPosition).sqrMagnitude > 1000f)
@@ -118,12 +118,13 @@ namespace CustomItems.Items
 
         private IEnumerator<float> ShooterProjectile(Player player, Vector3 targetPos, Player target = null)
         {
-            RoleType playerRole = player.Role;
+            RoleType playerRole = player.Role.Type;
 
             // This is the camera transform used to make grenades appear like they are coming from the player's head instead of their stomach. We move them here so they aren't skidding across the floor.
             player.Position = player.CameraTransform.TransformPoint(new Vector3(0.0715f, 0.0225f, 0.45f));
             player.Scale = new Vector3(0.15f, 0.15f, 0.15f);
             if (target != null)
+            {
                 while (Vector3.Distance(player.Position, target.Position) > (MaxDistancePerTick + 0.15f))
                 {
                     if (player.Role != playerRole)
@@ -133,7 +134,9 @@ namespace CustomItems.Items
 
                     yield return Timing.WaitForSeconds(TickFrequency);
                 }
+            }
             else
+            {
                 while (Vector3.Distance(player.Position, targetPos) > 0.5f)
                 {
                     if (player.Role != playerRole)
@@ -143,6 +146,7 @@ namespace CustomItems.Items
 
                     yield return Timing.WaitForSeconds(TickFrequency);
                 }
+            }
 
             player.Scale = Vector3.one;
 
@@ -151,13 +155,15 @@ namespace CustomItems.Items
 
             if (DespawnAfterUse)
             {
-                Log.Debug($"inv count: {player.Items.Count}");
+                Log.Debug($"inv count: {player.Items.Count}", Plugin.Instance.Config.IsDebugEnabled);
                 foreach (Item item in player.Items)
+                {
                     if (Check(item))
                     {
-                        Log.Debug("found 2818 in inventory, doing funni");
+                        Log.Debug("found 2818 in inventory, doing funni", Plugin.Instance.Config.IsDebugEnabled);
                         player.RemoveItem(item);
                     }
+                }
             }
 
             if (player.Role != RoleType.Spectator)

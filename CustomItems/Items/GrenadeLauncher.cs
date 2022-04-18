@@ -13,17 +13,16 @@ namespace CustomItems.Items
     using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.API.Features.Attributes;
+    using Exiled.API.Features.Components;
     using Exiled.API.Features.Items;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.Events.EventArgs;
-    using InventorySystem.Items.Firearms.Attachments;
     using InventorySystem.Items.Firearms.BasicMessages;
     using InventorySystem.Items.ThrowableProjectiles;
     using MEC;
     using UnityEngine;
-    using CollisionHandler = Exiled.API.Features.Components.CollisionHandler;
 
     /// <inheritdoc />
     [CustomItem(ItemType.GunLogicer)]
@@ -104,11 +103,11 @@ namespace CustomItems.Items
                 if (!(ev.Player.CurrentItem is Firearm firearm) || firearm.Ammo >= ClipSize)
                     return;
 
-                Log.Debug($"{Name}.{nameof(OnReloading)}: {ev.Player.Nickname} is reloading!", CustomItems.Instance.Config.IsDebugEnabled);
+                Log.Debug($"{Name}.{nameof(OnReloading)}: {ev.Player.Nickname} is reloading!", Plugin.Instance.Config.IsDebugEnabled);
 
                 foreach (Item item in ev.Player.Items.ToList())
                 {
-                    Log.Debug($"{Name}.{nameof(OnReloading)}: Found item: {item.Type} - {item.Serial}", CustomItems.Instance.Config.IsDebugEnabled);
+                    Log.Debug($"{Name}.{nameof(OnReloading)}: Found item: {item.Type} - {item.Serial}", Plugin.Instance.Config.IsDebugEnabled);
                     if (item.Type != ItemType.GrenadeHE && item.Type != ItemType.GrenadeFlash && item.Type != ItemType.SCP018)
                         continue;
                     if (TryGet(item, out CustomItem cItem))
@@ -127,13 +126,13 @@ namespace CustomItems.Items
 
                     loadedGrenade = item.Type == ItemType.GrenadeFlash ? GrenadeType.Flashbang :
                         item.Type == ItemType.GrenadeHE ? GrenadeType.FragGrenade : GrenadeType.Scp018;
-                    Log.Debug($"{Name}.{nameof(OnReloading)}: {ev.Player.Nickname} successfully reloaded. Grenade type: {loadedGrenade} IsCustom: {loadedCustomGrenade != null}", CustomItems.Instance.Config.IsDebugEnabled);
+                    Log.Debug($"{Name}.{nameof(OnReloading)}: {ev.Player.Nickname} successfully reloaded. Grenade type: {loadedGrenade} IsCustom: {loadedCustomGrenade != null}", Plugin.Instance.Config.IsDebugEnabled);
                     ev.Player.RemoveItem(item);
 
                     return;
                 }
 
-                Log.Debug($"{Name}.{nameof(OnReloading)}: {ev.Player.Nickname} was unable to reload - No grenades in inventory.", CustomItems.Instance.Config.IsDebugEnabled);
+                Log.Debug($"{Name}.{nameof(OnReloading)}: {ev.Player.Nickname} was unable to reload - No grenades in inventory.", Plugin.Instance.Config.IsDebugEnabled);
             }
         }
 
@@ -173,7 +172,7 @@ namespace CustomItems.Items
             comp.Init(ev.Shooter.GameObject, projectile);
             if (comp.Owner == null || comp.Grenade == null)
             {
-                Log.Debug($"{nameof(Name)}.{nameof(OnShooting)}: Grenade or owner is null, destroying collision component!", CustomItems.Instance.Config.IsDebugEnabled);
+                Log.Debug($"{nameof(Name)}.{nameof(OnShooting)}: Grenade or owner is null, destroying collision component!", Plugin.Instance.Config.IsDebugEnabled);
             }
         }
     }

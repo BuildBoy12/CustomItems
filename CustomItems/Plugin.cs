@@ -1,55 +1,48 @@
 // -----------------------------------------------------------------------
-// <copyright file="CustomItems.cs" company="Galaxy119 and iopietro">
+// <copyright file="Plugin.cs" company="Galaxy119 and iopietro">
 // Copyright (c) Galaxy119 and iopietro. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
 // -----------------------------------------------------------------------
 
-#pragma warning disable SA1200
 namespace CustomItems
 {
     using System;
-    using Events;
+    using CustomItems.Events;
     using Exiled.API.Features;
-    using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using HarmonyLib;
     using Server = Exiled.Events.Handlers.Server;
 
     /// <inheritdoc />
-    public class CustomItems : Plugin<Config>
+    public class Plugin : Plugin<Config>
     {
-        /// <summary>
-        /// Random Number Generator.
-        /// </summary>
-        public Random Rng = new Random();
-
         private Harmony harmonyInstance;
-
         private ServerHandler serverHandler;
 
         /// <summary>
         /// Gets the Plugin instance.
         /// </summary>
-        public static CustomItems Instance { get; private set; }
+        public static Plugin Instance { get; private set; }
 
         /// <inheritdoc/>
-        public override Version RequiredExiledVersion { get; } = new Version(5, 0, 0);
+        public override Version RequiredExiledVersion { get; } = new(5, 0, 0);
 
         /// <inheritdoc/>
         public override void OnEnabled()
         {
             Instance = this;
-            serverHandler = new ServerHandler();
 
-            harmonyInstance = new Harmony($"com.{nameof(CustomItems)}.galaxy-{DateTime.Now.Ticks}");
+            serverHandler = new ServerHandler(this);
+            Server.ReloadedConfigs += serverHandler.OnReloadingConfigs;
+
+            harmonyInstance = new Harmony($"com.{Name}.galaxy-{DateTime.UtcNow.Ticks}");
             harmonyInstance.PatchAll();
 
             Config.LoadItems();
 
             Log.Debug("Registering items..", Config.IsDebugEnabled);
             CustomItem.RegisterItems(overrideClass: Config.ItemConfigs);
-            Server.ReloadedConfigs += serverHandler.OnReloadingConfigs;
 
             base.OnEnabled();
         }
@@ -59,11 +52,12 @@ namespace CustomItems
         {
             CustomItem.UnregisterItems();
 
+            harmonyInstance?.UnpatchAll(harmonyInstance.Id);
+            harmonyInstance = null;
+
             Server.ReloadedConfigs -= serverHandler.OnReloadingConfigs;
-
-            harmonyInstance?.UnpatchAll();
-
             serverHandler = null;
+
             Instance = null;
 
             base.OnDisabled();
