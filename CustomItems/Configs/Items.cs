@@ -19,6 +19,8 @@ namespace CustomItems.Configs
     /// </summary>
     public class Items
     {
+        private IEnumerable<CustomItem> registeredItems;
+
         /// <summary>
         /// Gets or sets the list of <see cref="CustomItems.Items.EmpGrenade"/>s.
         /// </summary>
@@ -163,14 +165,21 @@ namespace CustomItems.Configs
             new AutoGun(),
         };
 
-        /// <inheritdoc cref="CustomItem.RegisterItems(bool,object)"/>
-        public void RegisterItems()
+        /// <summary>
+        /// Registers all custom items.
+        /// </summary>
+        public void Register() => registeredItems = CustomItem.RegisterItems(overrideClass: this);
+
+        /// <summary>
+        /// Unregisters all custom items.
+        /// </summary>
+        public void Unregister()
         {
-            foreach (PropertyInfo propertyInfo in GetType().GetProperties())
-            {
-                if (propertyInfo.GetValue(this) is IEnumerable<CustomItem> items)
-                    items.Register();
-            }
+            if (registeredItems is null)
+                return;
+
+            foreach (CustomItem customItem in registeredItems)
+                customItem.Unregister();
         }
     }
 }

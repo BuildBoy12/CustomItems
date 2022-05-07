@@ -47,7 +47,7 @@ namespace CustomItems
         /// <inheritdoc/>
         public override void OnDisabled()
         {
-            CustomItem.UnregisterItems();
+            Config.ItemConfigs.Unregister();
 
             harmonyInstance?.UnpatchAll(harmonyInstance.Id);
             harmonyInstance = null;

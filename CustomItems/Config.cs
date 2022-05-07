@@ -12,13 +12,18 @@ namespace CustomItems
     using Exiled.API.Features;
     using Exiled.API.Interfaces;
     using Exiled.Loader;
+    using YamlDotNet.Serialization;
 
     /// <summary>
     /// The plugin's config class.
     /// </summary>
     public class Config : IConfig
     {
-        private Configs.Items itemConfigs;
+        /// <summary>
+        /// Gets or sets the item configs.
+        /// </summary>
+        [YamlIgnore]
+        public Configs.Items ItemConfigs { get; set; }
 
         /// <inheritdoc/>
         [Description("Whether or not this plugin is enabled.")]
@@ -49,13 +54,13 @@ namespace CustomItems
                 Directory.CreateDirectory(ItemConfigFolder);
 
             string filePath = Path.Combine(ItemConfigFolder, ItemConfigFile);
-            itemConfigs = !File.Exists(filePath)
+            ItemConfigs = !File.Exists(filePath)
                 ? new Configs.Items()
                 : Loader.Deserializer.Deserialize<Configs.Items>(File.ReadAllText(filePath));
 
-            File.WriteAllText(filePath, Loader.Serializer.Serialize(itemConfigs));
+            File.WriteAllText(filePath, Loader.Serializer.Serialize(ItemConfigs));
             Log.Debug("Registering items..", IsDebugEnabled);
-            itemConfigs.RegisterItems();
+            ItemConfigs.Register();
         }
     }
 }

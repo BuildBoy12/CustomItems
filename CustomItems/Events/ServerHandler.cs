@@ -23,6 +23,10 @@ namespace CustomItems.Events
         /// <summary>
         /// OnReloadingConfigs handler.
         /// </summary>
-        public void OnReloadingConfigs() => plugin.Config.LoadItems();
+        public void OnReloadingConfigs()
+        {
+            plugin.Config.ItemConfigs.Unregister();
+            plugin.Config.LoadItems();
+        }
     }
 }
